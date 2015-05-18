@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<!-- Endpoints -->
+	<http pattern="/oauth/token" create-session="stateless"
+		authentication-manager-ref="clientAuthenticationManager">
+
+		<anonymous enabled="false" />
+		<http-basic entry-point-ref="clientAuthenticationEntryPoint" />
+		<access-denied-handler ref="oauthAccessDeniedHandler" />
+	</http>
+
+	<http pattern="/**" create-session="never" entry-point-ref="oauthAuthenticationEntryPoint"
+		use-expressions="true">
+
+		<anonymous enabled="false" />
+		<intercept-url pattern="/index.html" access="permitAll" method="GET"/>
+		<intercept-url pattern="/trades" method="POST"
+			access="hasRole('ROLE_API') and #oauth2.hasScope('write')" />
+		<intercept-url pattern="/trades" method="GET"
+			access="hasRole('ROLE_API') and #oauth2.hasScope('read')" />
+		<custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+		<access-denied-handler ref="oauthAccessDeniedHandler" />
+		<expression-handler ref="oauthWebExpressionHandler" />
+	</http>
+
+	<!-- Authentication managers -->
+	<authentication-manager id="clientAuthenticationManager">
+		<authentication-provider user-service-ref="clientDetailsUserService">
+			<!-- password-encoder hash="sha-256"/ -->
+		</authentication-provider>
+	</authentication-manager>
+
+	<!-- Spring OAuth requires this, but isn't used because didn't enabled grant-type 
+		password -->
+	<authentication-manager alias="userAuthenticationManager">
+		<authentication-provider>
+			<user-service>
+				<user authorities="ROLE_API" name="admin" password="hfhfdhWdffdg7372912..." />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+
+	<!-- OAuth Beans -->
+	<oauth:web-expression-handler id="oauthWebExpressionHandler" />
+
+	<beans:bean id="clientAuthenticationEntryPoint"
+		class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+		<beans:property name="typeName" value="Basic" />
+	</beans:bean>
+
+	<beans:bean id="oauthAuthenticationEntryPoint"
+		class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+	</beans:bean>
+
+	<beans:bean id="oauthAccessDeniedHandler"
+		class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler" />
+
+	<beans:bean id="clientCredentialsTokenEndpointFilter"
+		class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+		<beans:property name="authenticationManager" ref="clientAuthenticationManager" />
+	</beans:bean>
+
+	<!-- Client Details Service and TokenStore -->
+	<beans:bean id="tokenStore"
+		class="org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore" />
+
+	<beans:bean id="tokenServices"
+		class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+		<beans:property name="tokenStore" ref="tokenStore" />
+		<beans:property name="supportRefreshToken" value="true" />
+		<beans:property name="clientDetailsService" ref="clientDetailsService" />
+	</beans:bean>
+
+    <oauth:client-details-service id="clientDetailsService" >  
+            <oauth:client   
+				client-id="0cc175b9c0f1b6a831c399e269772661"  
+				secret="92eb5ffee6ae2fec3ad71c777531578f"
+				authorized-grant-types="client_credentials"
+				scope="write"  
+				authorities="ROLE_API"  
+				access-token-validity="0"  
+				refresh-token-validity="0"/>
+            <oauth:client   
+				client-id="353b302c44574f565045687e534e7d6a" 
+				secret="286924697e615a672a646a493545646c"  
+				authorized-grant-types="client_credentials"
+				scope="read"  
+				authorities="ROLE_API"  
+				access-token-validity="0"  
+				refresh-token-validity="0"/>
+    </oauth:client-details-service>  
+
+	<beans:bean id="clientDetailsUserService"
+		class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+		<beans:constructor-arg ref="clientDetailsService" />
+	</beans:bean>
+
+	<!-- Authorization & Resource Server -->
+	<oauth:authorization-server
+		client-details-service-ref="clientDetailsService" token-services-ref="tokenServices">
+
+		<oauth:client-credentials />
+	</oauth:authorization-server>
+
+	<oauth:resource-server id="resourceServerFilter"
+		token-services-ref="tokenServices" />
+
+</beans:beans>
