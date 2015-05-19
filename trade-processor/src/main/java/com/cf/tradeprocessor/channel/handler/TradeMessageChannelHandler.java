@@ -36,7 +36,7 @@ public class TradeMessageChannelHandler implements MessageHandler {
 		
 		try {
 			if (message.getPayload() instanceof TradeMessage) 
-				tradeProcessorService.process((TradeMessage) message.getPayload(), message.getHeaders().getTimestamp());
+				tradeProcessorService.process((TradeMessage) message.getPayload());
 		} catch (Exception e) {
 			String error = "Error processing message";
 			logger.error(error, e);

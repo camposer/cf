@@ -1,14 +1,22 @@
 package com.cf.tradeprocessor.model;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TradeMessage {
+import org.springframework.data.annotation.Id;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public class TradeMessage implements Serializable {
+	private static final long serialVersionUID = -4523936941300220553L;
 	private static final String DATE_MASK = "dd-MMM-yy HH:mm:ss";
 	
+	@Id
+	private String id;	
 	private String userId;
-	private String currencyForm; // Maybe create enum for this
+	private String currencyFrom; // Maybe create enum for this
 	private String currencyTo; // Maybe create enum for this
 	private Double amountSell;
 	private Double amountBuy;
@@ -17,21 +25,12 @@ public class TradeMessage {
 	private String timePlaced;
 	private String originatingCountry; // Maybe create enum for this
 	
-	public TradeMessage() {
-	
+	public String getId() {
+		return id;
 	}
-	
-	public TradeMessage(String userId, String currencyForm, String currencyTo,
-			Double amountSell, Double amountBuy, Double rate, String timePlaced,
-			String originatingCountry) {
-		this.userId = userId;
-		this.currencyForm = currencyForm;
-		this.currencyTo = currencyTo;
-		this.amountSell = amountSell;
-		this.amountBuy = amountBuy;
-		this.rate = rate;
-		this.timePlaced = timePlaced;
-		this.originatingCountry = originatingCountry;
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getUserId() {
@@ -42,12 +41,12 @@ public class TradeMessage {
 		this.userId = userId;
 	}
 	
-	public String getCurrencyForm() {
-		return currencyForm;
+	public String getCurrencyFrom() {
+		return currencyFrom;
 	}
 	
-	public void setCurrencyForm(String currencyForm) {
-		this.currencyForm = currencyForm;
+	public void setCurrencyFrom(String currencyFrom) {
+		this.currencyFrom = currencyFrom;
 	}
 	
 	public String getCurrencyTo() {
@@ -89,7 +88,8 @@ public class TradeMessage {
 	public void setTimePlaced(String timePlaced) {
 		this.timePlaced = timePlaced;
 	}
-	
+
+	@JsonIgnore
 	public Date getTimePlacedDate() throws ParseException {
 		return new SimpleDateFormat(DATE_MASK).parse(timePlaced);
 	}
@@ -104,8 +104,8 @@ public class TradeMessage {
 
 	@Override
 	public String toString() {
-		return "TradeMessage [userId=" + userId + ", currencyForm="
-				+ currencyForm + ", currencyTo=" + currencyTo + ", amountSell="
+		return "TradeMessage [userId=" + userId + ", currencyFrom="
+				+ currencyFrom + ", currencyTo=" + currencyTo + ", amountSell="
 				+ amountSell + ", amountBuy=" + amountBuy + ", rate=" + rate
 				+ ", timePlaced=" + timePlaced + ", originatingCountry="
 				+ originatingCountry + "]";

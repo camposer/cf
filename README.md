@@ -31,8 +31,8 @@ CF Test
 
 ## Launching trade-processor (frontend)
 
-$ cd $CF_HOME/trade-processor-front
-$ nodejs app
+- $ cd $CF_HOME/trade-processor-front
+- $ nodejs app
 
 ## Known improvements
 
@@ -41,3 +41,4 @@ The following improvements were no implemented because this is just a demo:
 - Replace InMemory Mongo for a Sharded Cluster or Replica Set
 - Replace InMemory Publish Subscribe Channel for a Backed MQ (e.g. ActiveMQ)
 - POM Hardening. Prevent memory leaks due to duplicated (different versions) dependencies
+- Replace InMemory TradeSummaryCache for a Memcached implementation

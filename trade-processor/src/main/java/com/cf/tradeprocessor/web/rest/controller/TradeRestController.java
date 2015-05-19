@@ -1,4 +1,4 @@
-package com.cf.tradeprocessor.web.rest;
+package com.cf.tradeprocessor.web.rest.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +16,8 @@ import com.cf.tradeprocessor.web.rest.response.JsonResponse;
 
 @RestController
 @RequestMapping("/trades")
-public class TradeController {
-	private static Logger logger = LoggerFactory.getLogger(TradeController.class); 
+public class TradeRestController {
+	private static Logger logger = LoggerFactory.getLogger(TradeRestController.class); 
 	
 	@Autowired
 	private TradeConsumerService tradeConsumerService;

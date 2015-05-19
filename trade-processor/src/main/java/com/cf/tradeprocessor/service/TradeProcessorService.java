@@ -7,7 +7,7 @@ public interface TradeProcessorService {
 	/**
 	 * Process raw trade messages  
 	 * @param	message					Spring message (payload: TradeMessage)
-	 * @param	timestamp				Timestamp when message was received 
-	 */
-	void process(TradeMessage message, Long timestamp) throws TradeProcessorException;
+	 * @throws	In case an error occurs while processing the trade message
+1	 */
+	void process(TradeMessage message) throws TradeProcessorException;
 }

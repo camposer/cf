@@ -1,11 +1,16 @@
 package com.cf.tradeprocessor.web.rest.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class JsonResponse {
 	private Boolean success;
-	@JsonIgnore
+	@JsonInclude(Include.NON_NULL)
 	private Object result;
+	
+	public JsonResponse() {
+		
+	}
 	
 	private JsonResponse(Boolean success, Object result) {
 		this.success = success;
