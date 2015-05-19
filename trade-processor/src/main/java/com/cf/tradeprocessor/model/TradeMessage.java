@@ -1,4 +1,4 @@
-package com.cf.tradeprocessor.dto;
+package com.cf.tradeprocessor.model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

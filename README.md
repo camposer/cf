@@ -35,3 +35,11 @@ $ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $TO
 
 $ cd $CF_HOME/trade-processor-front
 $ nodejs app
+
+## Known improvements
+
+The following improvements were no implemented because this is just a demo:
+- Replace InMemory OAuth DB for RDBMS
+- Replace InMemory Mongo for a Sharded Cluster or Replica Set
+- Replace InMemory Publish Subscribe Channel for a Backed MQ (e.g. ActiveMQ)
+- POM Hardening. Prevent memory leaks due to duplicated (different versions) dependencies

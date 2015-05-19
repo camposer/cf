@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cf.tradeprocessor.dto.TradeMessage;
 import com.cf.tradeprocessor.exception.TradeProcessorException;
-import com.cf.tradeprocessor.service.TradeService;
+import com.cf.tradeprocessor.model.TradeMessage;
+import com.cf.tradeprocessor.service.TradeConsumerService;
 import com.cf.tradeprocessor.web.rest.response.JsonResponse;
 
 @RestController
@@ -20,7 +20,7 @@ public class TradeController {
 	private static Logger logger = LoggerFactory.getLogger(TradeController.class); 
 	
 	@Autowired
-	private TradeService tradeService;
+	private TradeConsumerService tradeConsumerService;
 	
 	/**
 	 * Consumes trading operations and submits to the trading queue
@@ -47,7 +47,7 @@ public class TradeController {
 			produces = "application/json")
 	public @ResponseBody JsonResponse consume(@RequestBody TradeMessage tradeMessage) {
 		try {
-			tradeService.consumeTradeMessage(tradeMessage);
+			tradeConsumerService.consume(tradeMessage);
 			
 			return JsonResponse.success();
 		} catch (TradeProcessorException e) {

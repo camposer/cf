@@ -1,4 +1,4 @@
-package com.cf.tradeprocessor.queue.handler;
+package com.cf.tradeprocessor.channel.handler;
 
 import javax.annotation.PostConstruct;
 
@@ -12,31 +12,31 @@ import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
 
-import com.cf.tradeprocessor.dto.TradeMessage;
-import com.cf.tradeprocessor.service.TradeService;
+import com.cf.tradeprocessor.model.TradeMessage;
+import com.cf.tradeprocessor.service.TradeProcessorService;
 
 @Component
-public class TradeMessageHandler implements MessageHandler {
-	private static Logger logger = LoggerFactory.getLogger(TradeMessageHandler.class); 
+public class TradeMessageChannelHandler implements MessageHandler {
+	private static Logger logger = LoggerFactory.getLogger(TradeMessageChannelHandler.class); 
 	
-	@Value("#{tradeMessages}")
+	@Value("#{tradeMessageChannel}")
 	private AbstractSubscribableChannel channel;
+	
 	@Autowired
-	private TradeService tradeService;
+	private TradeProcessorService tradeProcessorService;
 	
 	@PostConstruct
 	public void init() {
 		channel.subscribe(this);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void handleMessage(Message<?> message) throws MessagingException {
 		logger.debug("Received trade message", message);
 		
 		try {
 			if (message.getPayload() instanceof TradeMessage) 
-				tradeService.process((Message<TradeMessage>) message);
+				tradeProcessorService.process((TradeMessage) message.getPayload(), message.getHeaders().getTimestamp());
 		} catch (Exception e) {
 			String error = "Error processing message";
 			logger.error(error, e);
@@ -44,4 +44,5 @@ public class TradeMessageHandler implements MessageHandler {
 			throw new MessagingException(error, e);
 		}
 	}
+
 }

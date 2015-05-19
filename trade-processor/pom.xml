@@ -13,8 +13,9 @@
 		<spring.version>4.1.6.RELEASE</spring.version>
 		<spring.integration.version>4.1.4.RELEASE</spring.integration.version>
 		<spring.oauth.version>2.0.7.RELEASE</spring.oauth.version>
+		<spring.data.mongo.version>1.7.0.RELEASE</spring.data.mongo.version>
 		<jackson.version>2.5.3</jackson.version>
-		<derby.version>10.11.1.1</derby.version>
+		<embed.mongo.version>1.47.3</embed.mongo.version>
 	</properties>
 
 	<dependencies>
@@ -39,6 +40,11 @@
 			<artifactId>spring-security-oauth2</artifactId>
 			<version>${spring.oauth.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>${spring.data.mongo.version}</version>
+		</dependency>
 
 		<!-- Jackson -->
 		<dependency>
@@ -54,6 +60,14 @@
 			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- Embed Mongo -->
+		<dependency>
+			<groupId>de.flapdoodle.embed</groupId>
+			<artifactId>de.flapdoodle.embed.mongo</artifactId>
+			<version>${embed.mongo.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
