@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,21 @@ public class TradeSummaryCacheImpl implements TradeSummaryCache {
 	
 	public TradeSummaryCacheImpl() {
 		tradeSummaryCache = new Hashtable<String, Map<String,TradeSummary>>();
+	}
+
+	@Override
+	public Map<String, List<TradeSummary>> getTradeSummaries() {
+		Map<String, List<TradeSummary>> tradeSummaries = null;
+		Set<String> currenciesFrom = tradeSummaryCache.keySet();
+		
+		for (String currencyFrom : currenciesFrom) {
+			if (tradeSummaries == null)
+				tradeSummaries = new Hashtable<String, List<TradeSummary>>();
+			
+			tradeSummaries.put(currencyFrom, getTradeSummaries(currencyFrom));
+		}
+
+		return tradeSummaries;
 	}
 
 	@Override

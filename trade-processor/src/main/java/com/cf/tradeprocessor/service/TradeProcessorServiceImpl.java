@@ -3,6 +3,7 @@ package com.cf.tradeprocessor.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.cf.tradeprocessor.cache.TradeSummaryCache;
@@ -18,14 +19,15 @@ public class TradeProcessorServiceImpl implements TradeProcessorService {
 	private TradeMessageRepository tradeMessageRepository;
 	@Autowired
 	private TradeSummaryCache tradeSummaryCache;
+    @Autowired
+    private SimpMessagingTemplate template;	
 	
 	@Override
 	public void process(TradeMessage message) throws TradeProcessorException {
 		try {
-			// TODO 0. Include Integration Test
 			saveTradeMessage(message);
 			summarizeTrades(message);
-			sendSummary();
+			sendSummaries();
 		} catch (Exception e) {
 			String error = "Error while processing trade message";
 			logger.error(error, e);
@@ -42,7 +44,7 @@ public class TradeProcessorServiceImpl implements TradeProcessorService {
 		tradeSummaryCache.add(message);
 	}
 
-	private void sendSummary() {
-		// TODO Auto-generated method stub
+	private void sendSummaries() {
+		template.convertAndSend("/topic/trade-summaries", tradeSummaryCache.getTradeSummaries());
 	}
 }

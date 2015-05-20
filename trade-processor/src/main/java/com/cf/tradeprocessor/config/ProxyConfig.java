@@ -1,10 +1,10 @@
 package com.cf.tradeprocessor.config;
 
-import com.cf.tradeprocessor.test.config.AppConfigTest;
+import com.cf.tradeprocessor.test.config.ProxyConfigTest;
 
 /**
  * This class should be include its own "production" configuration 
  */
-public class AppConfig extends AppConfigTest {
+public class ProxyConfig extends ProxyConfigTest {
 	
 }

@@ -1,6 +1,7 @@
 package com.cf.tradeprocessor.cache;
 
 import java.util.List;
+import java.util.Map;
 
 import com.cf.tradeprocessor.model.TradeMessage;
 import com.cf.tradeprocessor.model.TradeSummary;
@@ -12,6 +13,13 @@ public interface TradeSummaryCache {
 	 */
 	void add(TradeMessage tradeMessage);
 	
+	/**
+	 * Get trade summaries 
+	 * @param	currencyFrom	Currency to be used as key for trade summaries
+	 * @return					Map of trade summaries for each currency. If there are are no summaries null is returned
+	 */
+	Map<String, List<TradeSummary>> getTradeSummaries();
+
 	/**
 	 * Get trade summaries for a specified currency
 	 * @param	currencyFrom	Currency to be used as key for trade summaries

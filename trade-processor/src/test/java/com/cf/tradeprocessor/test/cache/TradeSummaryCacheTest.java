@@ -63,6 +63,7 @@ public class TradeSummaryCacheTest {
 		tradeSummaryCache.add(tradeMessage21);
 		tradeSummaryCache.add(tradeMessage22);
 		
+		assertEquals(tradeSummaryCache.getTradeSummaries().size(), 2);
 		assertEquals(tradeSummaryCache.getTradeSummaries(currencyFrom).size(), 2);
 		
 		TradeSummary tradeSummary = tradeSummaryCache.getTradeSummary(currencyFrom, currencyTo1);

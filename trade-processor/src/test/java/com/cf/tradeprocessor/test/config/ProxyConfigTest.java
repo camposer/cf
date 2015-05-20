@@ -11,7 +11,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource("classpath:/proxy.properties")
-public class AppConfigTest {
+public class ProxyConfigTest {
 	@Value("${proxy.host}")
 	public String proxyHost;
 	@Value("${proxy.port}")

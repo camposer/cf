@@ -23,12 +23,12 @@ import com.cf.tradeprocessor.service.TradeConsumerService;
 import com.cf.tradeprocessor.service.TradeConsumerServiceImpl;
 import com.cf.tradeprocessor.service.TradeProcessorService;
 import com.cf.tradeprocessor.service.TradeProcessorServiceImpl;
-import com.cf.tradeprocessor.test.config.AppConfigTest;
+import com.cf.tradeprocessor.test.config.ProxyConfigTest;
 import com.cf.tradeprocessor.test.config.MongoConfigTest;
 import com.cf.tradeprocessor.test.integration.TradeConsumerProducerTest.Config;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { Config.class, AppConfigTest.class, MongoConfigTest.class })
+@ContextConfiguration(classes = { Config.class, ProxyConfigTest.class, MongoConfigTest.class })
 public class TradeConsumerProducerTest {
 	private final String currencyFrom = "EUR";
 	private final String currencyTo = "GBP";

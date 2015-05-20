@@ -3,9 +3,10 @@ CF Test
 
 ## Requirements
 
-- JDK 1.8
+- JDK 1.8.X
 - Maven 3.X
-- Node JS 0.10
+- Node JS 0.10.X
+- Compass 0.1.X
 
 ## Backend (trade-processor)
 
@@ -42,7 +43,7 @@ $ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $TO
 
 ```
 $ cd $CF_HOME/trade-processor-front
-$ nodejs app
+$ grunt serve
 ```
 
 ## Known improvements
