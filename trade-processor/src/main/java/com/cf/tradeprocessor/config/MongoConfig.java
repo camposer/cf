@@ -1,8 +1,6 @@
 package com.cf.tradeprocessor.config;
 
 import java.io.IOException;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.net.UnknownHostException;
 
 import javax.annotation.PostConstruct;
@@ -32,46 +30,19 @@ import de.flapdoodle.embed.process.runtime.Network;
 @EnableMongoRepositories(basePackages = "com.cf.tradeprocessor.repository.mongo")
 @PropertySource("classpath:/app.properties")
 public class MongoConfig {
+	@Value("${mongo.host}")
+	public String mongoHost;
 	@Value("${mongo.port}")
 	public String mongoPort;
 	@Value("${mongo.database}")
 	public String mongoDatabase;
-	@Value("${proxy.host}")
-	public String proxyHost;
-	@Value("${proxy.port}")
-	public String proxyPort;
-	@Value("${proxy.user}")
-	public String proxyUser;
-	@Value("${proxy.password}")
-	public String proxyPassword;
 
 	private int port;
 	private MongodExecutable mongodExecutable;
 	private MongodProcess mongod;
 
-	public void configureProxy() {
-		if (proxyHost.trim().equals("") || proxyPort.trim().equals("")) // exiting because there's no proxy 
-			return;
-		
-		Authenticator.setDefault(
-		   new Authenticator() {
-		      public PasswordAuthentication getPasswordAuthentication() {
-		         return new PasswordAuthentication(
-		               proxyUser, proxyPassword.toCharArray());
-		      }
-		   }
-		);
-
-		System.setProperty("http.proxyHost", proxyHost);
-		System.setProperty("http.proxyPort", proxyPort);
-		System.setProperty("http.proxyUser", proxyUser);
-		System.setProperty("http.proxyPassword", proxyPassword);		
-	}
-	
 	@PostConstruct
 	public void init() throws UnknownHostException, IOException {
-		configureProxy();
-		
 		port = Integer.parseInt(mongoPort);
 		
 		MongodStarter starter = MongodStarter.getDefaultInstance();
@@ -97,7 +68,7 @@ public class MongoConfig {
     
 	@Bean
 	public Mongo mongo() throws IOException {
-		return new MongoClient("localhost", port);
+		return new MongoClient(mongoHost, port);
 	}
 
 	@Bean 
