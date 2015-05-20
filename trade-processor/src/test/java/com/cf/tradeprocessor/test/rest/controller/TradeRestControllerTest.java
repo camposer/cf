@@ -1,4 +1,4 @@
-package com.cf.tradeprocessor.test.integration;
+package com.cf.tradeprocessor.test.rest.controller;
 
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,7 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 @WebAppConfiguration
-public class TradeConsumerTest {
+public class TradeRestControllerTest {
 	private MockMvc mockMvc;
 	private ObjectMapper mapper;
 	

@@ -16,6 +16,8 @@
 		<spring.data.mongo.version>1.7.0.RELEASE</spring.data.mongo.version>
 		<jackson.version>2.5.3</jackson.version>
 		<embed.mongo.version>1.47.3</embed.mongo.version>
+		<servlet.api.version>3.1.0</servlet.api.version>
+		<junit.version>4.12</junit.version>
 	</properties>
 
 	<dependencies>
@@ -63,7 +65,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
+			<version>${servlet.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -78,13 +80,12 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

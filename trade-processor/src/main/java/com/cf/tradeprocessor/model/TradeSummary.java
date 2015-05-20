@@ -51,4 +51,12 @@ public class TradeSummary implements Serializable {
 		this.rateAvg += amountBuy / amountSell;
 		this.rateCounter++;
 	}
+
+	@Override
+	public String toString() {
+		return "TradeSummary [currencyFrom=" + currencyFrom + ", currencyTo="
+				+ currencyTo + ", amountSell=" + amountSell + ", amountBuy="
+				+ amountBuy + ", rateAvg=" + rateAvg + ", rateCounter="
+				+ rateCounter + "]";
+	}
 }
