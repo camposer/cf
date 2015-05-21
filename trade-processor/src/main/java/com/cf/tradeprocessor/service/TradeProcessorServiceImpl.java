@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import com.cf.tradeprocessor.cache.TradeSummaryCache;
 import com.cf.tradeprocessor.exception.TradeProcessorException;
 import com.cf.tradeprocessor.model.TradeMessage;
 import com.cf.tradeprocessor.repository.mongo.TradeMessageRepository;
@@ -18,7 +17,7 @@ public class TradeProcessorServiceImpl implements TradeProcessorService {
 	@Autowired
 	private TradeMessageRepository tradeMessageRepository;
 	@Autowired
-	private TradeSummaryCache tradeSummaryCache;
+	private TradeSummaryService tradeSummaryService;
     @Autowired
     private SimpMessagingTemplate template;	
 	
@@ -41,10 +40,10 @@ public class TradeProcessorServiceImpl implements TradeProcessorService {
 	}
 
 	private void summarizeTrades(TradeMessage message) {
-		tradeSummaryCache.add(message);
+		tradeSummaryService.add(message);
 	}
 
 	private void sendSummaries() {
-		template.convertAndSend("/topic/trade-summaries", tradeSummaryCache.getTradeSummaries());
+		template.convertAndSend("/topic/trade-summaries", tradeSummaryService.getTradeSummaries());
 	}
 }

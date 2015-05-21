@@ -1,17 +1,18 @@
 package com.cf.tradeprocessor.cache;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.stereotype.Component;
 
-import com.cf.tradeprocessor.model.TradeMessage;
 import com.cf.tradeprocessor.model.TradeSummary;
 
+/**
+ * This should be changed by a Memcached implementation
+ */
 @Component
 public class TradeSummaryCacheImpl implements TradeSummaryCache {
 	private Map<String, Map<String, TradeSummary>> tradeSummaryCache;
@@ -19,59 +20,29 @@ public class TradeSummaryCacheImpl implements TradeSummaryCache {
 	public TradeSummaryCacheImpl() {
 		tradeSummaryCache = new Hashtable<String, Map<String,TradeSummary>>();
 	}
-
-	@Override
-	public Map<String, List<TradeSummary>> getTradeSummaries() {
-		Map<String, List<TradeSummary>> tradeSummaries = null;
-		Set<String> currenciesFrom = tradeSummaryCache.keySet();
-		
-		for (String currencyFrom : currenciesFrom) {
-			if (tradeSummaries == null)
-				tradeSummaries = new Hashtable<String, List<TradeSummary>>();
-			
-			tradeSummaries.put(currencyFrom, getTradeSummaries(currencyFrom));
-		}
-
-		return tradeSummaries;
-	}
-
-	@Override
-	public void add(TradeMessage tradeMessage) {
-		Map<String, TradeSummary> currencyFromTradeMap = tradeSummaryCache.get(tradeMessage.getCurrencyFrom());
-
-		if (currencyFromTradeMap == null) { 
-			currencyFromTradeMap = new Hashtable<String, TradeSummary>();
-			tradeSummaryCache.put(tradeMessage.getCurrencyFrom(), currencyFromTradeMap);
-		}
-
-		TradeSummary tradeSummary = currencyFromTradeMap.get(tradeMessage.getCurrencyTo());
-		
-		if (tradeSummary == null) {
-			tradeSummary = new TradeSummary(tradeMessage.getCurrencyFrom(), tradeMessage.getCurrencyTo());
-			currencyFromTradeMap.put(tradeMessage.getCurrencyTo(), tradeSummary);
-		}
-		
-		tradeSummary.addOperation(tradeMessage.getAmountSell(), tradeMessage.getAmountBuy());
-	}
-
-	@Override
-	public List<TradeSummary> getTradeSummaries(String currencyFrom) {
-		Collection<TradeSummary> tradeSummaries = tradeSummaryCache.get(currencyFrom).values();
-		
-		if (tradeSummaries != null)
-			return new ArrayList<TradeSummary>(tradeSummaries);
-		else
-			return null;
-	}
-
-	@Override
-	public TradeSummary getTradeSummary(String currenFrom, String currencyTo) {
-		Map<String,TradeSummary> currencyFromTradeMap = tradeSummaryCache.get(currenFrom);
-		
-		if (currencyFromTradeMap != null)
-			return currencyFromTradeMap.get(currencyTo);
-		else
-			return null;
+	
+	/**
+	 * This method may be called in case of an error in any method declared on TradeSummaryCache
+	 * For example: if we have a memcached implementation of this class, data may be lost and 
+	 * in that case a reconstruction of the cache should be triggered    
+	 */
+	@PostConstruct
+	public void populate() {
+		// TODO Implement! Right now is not necessary because it's used an embed mongo
 	}
 	
+	@Override
+	public Set<String> currenciesFrom() {
+		return tradeSummaryCache.keySet();
+	}
+	
+	@Override
+	public Map<String, TradeSummary> get(String currencyFrom) {
+		return tradeSummaryCache.get(currencyFrom);
+	}
+	
+	@Override
+	public void put(String currencyFrom, Map<String, TradeSummary> tradeSummaryMap) {
+		tradeSummaryCache.put(currencyFrom, tradeSummaryMap);
+	}
 }

@@ -1,37 +1,24 @@
 package com.cf.tradeprocessor.cache;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import com.cf.tradeprocessor.model.TradeMessage;
 import com.cf.tradeprocessor.model.TradeSummary;
 
 public interface TradeSummaryCache {
 	/**
-	 * Add the trade message data to its corresponding trade summary
-	 * @param	tradeMessage	Trade message to be processed (summarized)
+	 * Returns a set of all currencyFrom
 	 */
-	void add(TradeMessage tradeMessage);
+	Set<String> currenciesFrom();
 	
 	/**
-	 * Get trade summaries 
-	 * @param	currencyFrom	Currency to be used as key for trade summaries
-	 * @return					Map of trade summaries for each currency. If there are are no summaries null is returned
+	 * Return a map of currencyTo and TradeSummary for a given currencyTo
+	 * IMPORTANT: The first time this method is called should read mongodb for populating the internal map
 	 */
-	Map<String, List<TradeSummary>> getTradeSummaries();
-
-	/**
-	 * Get trade summaries for a specified currency
-	 * @param	currencyFrom	Currency to be used as key for trade summaries
-	 * @return					List of trade summaries for each currency. If there are are no summaries null is returned
-	 */
-	List<TradeSummary> getTradeSummaries(String currencyFrom);
+	Map<String, TradeSummary> get(String currencyFrom);
 	
 	/**
-	 * Get trade summary for a specified pair of currencies (from and to)
-	 * @param	currencyFrom	Currency from
-	 * @param 	currencyTo		Currency to
-	 * @return					Trade summary for the specified currency pair (from and to)
+	 * Puts a map of currencyTo and TradeSummary  for a currencyFrom
 	 */
-	TradeSummary getTradeSummary(String currencyFrom, String currencyTo);
+	void put(String currencyFrom, Map<String, TradeSummary> tradeSummaryMap);
 }

@@ -7,6 +7,7 @@ CF Test
 - Maven 3.X
 - Node JS 0.10.X
 - Compass 0.1.X
+- NPM 1.4.X
 
 ## Backend (trade-processor)
 
@@ -42,13 +43,15 @@ $ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $TO
 ## Launching trade-processor (frontend)
 
 ```
+$ sudo npm install bower -g
 $ cd $CF_HOME/trade-processor-front
+$ bower install
 $ grunt serve
 ```
 
 ## Known improvements
 
-The following improvements were no implemented because this is just a demo:
+The following improvements were not implemented because this is a demo:
 - Replace InMemory OAuth DB (e.g. for RDBMS)
 - Replace InMemory Mongo (e.g. for a Sharded Cluster or Replica Set)
 - Replace InMemory Publish Subscribe Channel (e.g. for a Backed MQ)

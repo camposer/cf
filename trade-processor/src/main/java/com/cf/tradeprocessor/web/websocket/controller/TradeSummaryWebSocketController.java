@@ -5,17 +5,17 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
-import com.cf.tradeprocessor.cache.TradeSummaryCache;
+import com.cf.tradeprocessor.service.TradeSummaryService;
 import com.cf.tradeprocessor.web.rest.response.JsonResponse;
 
 @Controller
 public class TradeSummaryWebSocketController {
 	@Autowired
-	private TradeSummaryCache tradeSummaryCache;
+	private TradeSummaryService tradeSummaryService;
 	
     @MessageMapping("/trade-summaries")
     @SendTo("/topic/trade-summaries")
     public JsonResponse greeting() throws Exception {
-        return JsonResponse.success(tradeSummaryCache.getTradeSummaries());
+        return JsonResponse.success(tradeSummaryService.getTradeSummaries());
     }
 }
