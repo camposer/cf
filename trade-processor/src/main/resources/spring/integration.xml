@@ -7,10 +7,9 @@
 		http://www.springframework.org/schema/integration/jms http://www.springframework.org/schema/integration/jms/spring-integration-jms-4.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-	<!-- This file should include its own production configuration -->
-	<beans:import resource="classpath:/spring-test/integration.xml"/>
+	<!-- Channels -->
+	<publish-subscribe-channel id="tradeMessageChannel"/>
 	
 	<!-- Backed active-mq channel -->
 	<!-- int-jms:publish-subscribe-channel id="tradeMessageChannel" topic-name="jms.tradeMessages" connection-factory="connectionFactory"/-->
-
 </beans:beans>

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class InMemoryTradeSummaryCacheTest {
 	private ApplicationContext ctx;
 	@Autowired
 	private TradeMessageRepository tradeMessageRepository;
+	@Autowired
+	private MongoConfigTest mongoConfigTest;
 	
 	@Test
 	public void testPopulate() {
@@ -100,6 +103,11 @@ public class InMemoryTradeSummaryCacheTest {
 		assertTrue(amountSell2 == tradeSummary.getTotalAmountSell());
 		assertTrue(amountBuy2 == tradeSummary.getTotalAmountBuy());
 		assertTrue(rate2 == tradeSummary.getRateAvg());
+	}
+	
+	@After
+	public void destroy() {
+		mongoConfigTest.destroy();
 	}
 	
 	@Configuration

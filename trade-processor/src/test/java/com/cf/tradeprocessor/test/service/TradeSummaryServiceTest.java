@@ -3,6 +3,7 @@ package com.cf.tradeprocessor.test.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ import com.cf.tradeprocessor.test.service.TradeSummaryServiceTest.Config;
 public class TradeSummaryServiceTest {
 	@Autowired
 	private TradeSummaryService tradeSummaryService;
+	@Autowired
+	private MongoConfigTest mongoConfigTest;	
 	
 	@Test
 	public void test() {
@@ -85,6 +88,11 @@ public class TradeSummaryServiceTest {
 		assertTrue(amountSell2 == tradeSummary.getTotalAmountSell());
 		assertTrue(amountBuy2 == tradeSummary.getTotalAmountBuy());
 		assertTrue(rate2 == tradeSummary.getRateAvg());
+	}
+	
+	@After
+	public void destroy() {
+		mongoConfigTest.destroy();
 	}
 	
 	@Configuration

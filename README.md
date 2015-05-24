@@ -11,6 +11,18 @@ CF Test
 
 ## Backend (trade-processor)
 
+### Intro
+
+- The backend has a REST endpoint /trades able to consume trade messages. This endpoint is secured with OAuth.
+- Messages are forwarded to a channel listened by a Processor Service.
+- The Processor Service store data into a Mongo, re-calculate Trade Summary and publish new values to a Stomp WebSocket endpoint /topic/trade-summaries
+- Frontend consume messages using sockjs and stompjs.
+
+### Technologies
+
+- Backend: Spring IoC, MVC Security, OAuth2, WebSocket and Data/Mongo
+- Frontend: AngularJS, Bootstrap and Google-Chart
+
 ### Assumptions
 
 - CF_HOME is an environment variable pointing to the directory where the git repo was cloned
@@ -23,7 +35,9 @@ $ mvn clean && mvn install
 $ mvn tomcat7:run
 ```
 
-NOTE: mvn install will execute all app tests
+NOTES: 
+- mvn install will execute all app tests
+- proxy.properties can be used for configuring a corporate proxy settings
 
 ### For sending trade messages
 
@@ -38,6 +52,7 @@ $ TOKEN="previously generated access token"
 - Sending messages
 ```
 $ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{ "userId": "134256", "currencyFrom": "EUR", "currencyTo": "GBP", "amountSell": 1000, "amountBuy": 747.10, "rate": 0.7471, "timePlaced" : "24­JAN­15 10:27:44", "originatingCountry" : "FR" }' http://localhost:8080/trade-processor/trades && echo
+$ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{ "userId": "134256", "currencyFrom": "USD", "currencyTo": "GBP", "amountSell": 1000, "amountBuy": 500.00, "rate": 0.5, "timePlaced" : "24­JAN­15 10:27:44", "originatingCountry" : "US" }' http://localhost:8080/trade-processor/trades && echo
 ```
 
 ## Launching trade-processor (frontend)
@@ -58,4 +73,7 @@ The following improvements were not implemented because this is a demo:
 - Replace InMemory TradeSummaryCache (e.g. for a Memcached implementation)
 - POM Hardening. Prevent memory leaks due to duplicated (different versions) dependencies
 - Add tests for OAuth Access (e.g. using HttpClient)
+- Add integration test for WebSocket part
 - Add stress tests for Consumer-Producer (e.g. using JMeter)
+- Add tests for frontend
+- Improve GUI design and UX

@@ -1,0 +1,19 @@
+<div class="row marketing">
+  <h1>Trade Summary</h1>
+  <div google-chart chart="chartObject" style="{{cssStyle}}"></div>
+
+  <h2>Details</h2>
+  <div ng-repeat="(currencyFrom, tradeSummaryMap) in tradeSummaries">
+    <h4>TradeSummary. Currency From: {{ currencyFrom }}</h4>
+
+    <div ng-repeat="(currencyTo, tradeSummary) in tradeSummaryMap">
+      <p>
+        <em>Currency To: {{ tradeSummary['currencyTo'] }}</em><br>
+        Total Amount Sell: {{ tradeSummary['totalAmountSell'].toFixed(3) }}<br>
+        Total Amournt Buy: {{ tradeSummary['totalAmountBuy'].toFixed(3) }}<br>
+        Rate Average: {{ tradeSummary['rateAvg'].toFixed(3) }}
+      <p>
+    </div>
+
+  </div>
+</div>

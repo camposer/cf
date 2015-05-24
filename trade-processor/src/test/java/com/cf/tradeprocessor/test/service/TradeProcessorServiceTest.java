@@ -3,6 +3,7 @@ package com.cf.tradeprocessor.test.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,8 +45,11 @@ public class TradeProcessorServiceTest {
 	private TradeSummaryService tradeSummaryService;
     @Autowired
     private SimpMessagingTemplate template;	
-
+	@Autowired
+	private MongoConfigTest mongoConfigTest;
+	
 	private TradeMessage tradeMessage;
+	
 	
 	@Before
 	public void setUp() throws Exception {
@@ -78,6 +82,11 @@ public class TradeProcessorServiceTest {
 		assertEquals(tradeMessageInRepo, tradeMessage);
 	}
 
+	@After
+	public void destroy() {
+		mongoConfigTest.destroy();
+	}
+	
 	@Configuration
 	public static class Config {
 		@Bean
