@@ -8,6 +8,9 @@
  *
  * Main module of the application.
  */
+
+const BASE_URL = 'http://localhost:8080/trade-processor';
+ 
 angular
   .module('tradeProcessorFrontApp', [
     'ngAnimate',

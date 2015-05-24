@@ -26,7 +26,7 @@
  	};
 
  	$scope.connect = function() {
- 		socket = new SockJS('http://localhost:8080/trade-processor/trade-summaries');
+ 		socket = new SockJS(BASE_URL + '/trade-summaries');
  		stompClient = Stomp.over(socket);
 
  		stompClient.connect({}, function(response) {

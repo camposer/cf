@@ -5,7 +5,7 @@ CF Test
 
 - The backend has a REST endpoint /trades able to consume trade messages. This endpoint is secured with OAuth.
 - Messages are forwarded to a channel listened by a Processor Service.
-- The Processor Service store data into a Mongo, re-calculate Trade Summary and publish new values to a Stomp WebSocket endpoint /topic/trade-summaries
+- The Processor Service stores data into a Mongo, re-calculate Trade Summary and publish new values to a Stomp WebSocket endpoint /topic/trade-summaries
 - Frontend consume messages using sockjs and stompjs.
 
 ### Technologies
@@ -64,6 +64,13 @@ $ bower install
 $ grunt serve
 ```
 
+NOTE: 
+- Maybe you run into a "Waiting...Fatal error: watch ENOSPC" problem when starting grunt. You may solve this increasing the number of files that can be watched by a user
+
+```
+$ echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+```
+
 ## Known improvements
 
 The following improvements were not implemented because this is a demo:
@@ -75,5 +82,5 @@ The following improvements were not implemented because this is a demo:
 - Add tests for OAuth Access (e.g. using HttpClient)
 - Add integration test for WebSocket part
 - Add stress tests for Consumer-Producer (e.g. using JMeter)
-- Add tests for frontend
+- Add tests for frontend (ideally Selenium tests)
 - Improve GUI design and UX
