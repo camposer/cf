@@ -1,23 +1,30 @@
 package com.cf.tradeprocessor.cache;
 
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.cf.tradeprocessor.model.TradeMessage;
 import com.cf.tradeprocessor.model.TradeSummary;
+import com.cf.tradeprocessor.repository.mongo.TradeMessageRepository;
 
 /**
  * This should be changed by a Memcached implementation
  */
 @Component
-public class TradeSummaryCacheImpl implements TradeSummaryCache {
+public class InMemoryTradeSummaryCache implements TradeSummaryCache {
 	private Map<String, Map<String, TradeSummary>> tradeSummaryCache;
 	
-	public TradeSummaryCacheImpl() {
+	@Autowired
+	private TradeMessageRepository tradeMessageRepository;
+	
+	public InMemoryTradeSummaryCache() {
 		tradeSummaryCache = new Hashtable<String, Map<String,TradeSummary>>();
 	}
 	
@@ -28,7 +35,20 @@ public class TradeSummaryCacheImpl implements TradeSummaryCache {
 	 */
 	@PostConstruct
 	public void populate() {
-		// TODO Implement! Right now is not necessary because it's used an embed mongo
+		List<TradeMessage> tradeMessages = tradeMessageRepository.findTradeSummaries();
+		
+		if (tradeMessages != null) for (TradeMessage tm : tradeMessages) {
+			Map<String, TradeSummary> tradeSummaryMap = tradeSummaryCache.get(tm.getCurrencyFrom());
+			
+			if (tradeSummaryMap == null) {
+				tradeSummaryMap = new Hashtable<String, TradeSummary>();
+				tradeSummaryCache.put(tm.getCurrencyFrom(), tradeSummaryMap);
+			}
+			
+			TradeSummary tradeSummary = new TradeSummary(tm.getCurrencyFrom(), tm.getCurrencyTo());
+			tradeSummary.addOperation(tm.getAmountSell(), tm.getAmountBuy());
+			tradeSummaryMap.put(tm.getCurrencyTo(), tradeSummary);
+		}
 	}
 	
 	@Override

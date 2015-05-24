@@ -15,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.cf.tradeprocessor.cache.TradeSummaryCache;
-import com.cf.tradeprocessor.cache.TradeSummaryCacheImpl;
+import com.cf.tradeprocessor.cache.InMemoryTradeSummaryCache;
 import com.cf.tradeprocessor.model.TradeMessage;
 import com.cf.tradeprocessor.model.TradeSummary;
 import com.cf.tradeprocessor.repository.mongo.TradeMessageRepository;
@@ -92,7 +92,7 @@ public class TradeProcessorServiceTest {
 
 		@Bean
 		public TradeSummaryCache tradeSummaryCache() {
-			return new TradeSummaryCacheImpl();
+			return new InMemoryTradeSummaryCache();
 		}
 
 		@Bean

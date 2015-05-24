@@ -1,13 +1,17 @@
-package com.cf.tradeprocessor.test.service;
+package com.cf.tradeprocessor.test.cache;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -15,19 +19,20 @@ import com.cf.tradeprocessor.cache.InMemoryTradeSummaryCache;
 import com.cf.tradeprocessor.cache.TradeSummaryCache;
 import com.cf.tradeprocessor.model.TradeMessage;
 import com.cf.tradeprocessor.model.TradeSummary;
-import com.cf.tradeprocessor.service.TradeSummaryService;
-import com.cf.tradeprocessor.service.TradeSummaryServiceImpl;
+import com.cf.tradeprocessor.repository.mongo.TradeMessageRepository;
+import com.cf.tradeprocessor.test.cache.InMemoryTradeSummaryCacheTest.Config;
 import com.cf.tradeprocessor.test.config.MongoConfigTest;
-import com.cf.tradeprocessor.test.service.TradeSummaryServiceTest.Config;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { Config.class, MongoConfigTest.class })
-public class TradeSummaryServiceTest {
+public class InMemoryTradeSummaryCacheTest {
 	@Autowired
-	private TradeSummaryService tradeSummaryService;
+	private ApplicationContext ctx;
+	@Autowired
+	private TradeMessageRepository tradeMessageRepository;
 	
 	@Test
-	public void test() {
+	public void testPopulate() {
 		final String currencyFrom1 = "EUR";
 		final String currencyFrom2 = "YEN";
 		final String currencyTo1 = "GBP";
@@ -63,25 +68,35 @@ public class TradeSummaryServiceTest {
 		tradeMessage22_1.setAmountSell(amountSell2);
 		tradeMessage22_1.setAmountBuy(amountBuy2);
 
-		tradeSummaryService.add(tradeMessage11_1);
-		tradeSummaryService.add(tradeMessage11_2);
-		tradeSummaryService.add(tradeMessage12_1);
-		tradeSummaryService.add(tradeMessage22_1);
+		tradeMessageRepository.save(tradeMessage11_1);
+		tradeMessageRepository.save(tradeMessage11_2);
+		tradeMessageRepository.save(tradeMessage12_1);
+		tradeMessageRepository.save(tradeMessage22_1);
 
-		assertEquals(2, tradeSummaryService.getTradeSummaries().size());
-		assertEquals(2, tradeSummaryService.getTradeSummaries(currencyFrom1).size());
+		// Getting tradeSummaryCache "deferred" for testing populate
+		TradeSummaryCache tradeSummaryCache = ctx.getBean(TradeSummaryCache.class);
+
+		assertEquals(2, tradeSummaryCache.currenciesFrom().size());
+	
+		// currencyFrom1
+		Map<String, TradeSummary> tradeSummaryMap = tradeSummaryCache.get(currencyFrom1);
+		assertEquals(2, tradeSummaryMap.keySet().size());
 		
-		TradeSummary tradeSummary = tradeSummaryService.getTradeSummary(currencyFrom1, currencyTo1);
+		TradeSummary tradeSummary = tradeSummaryMap.get(currencyTo1);
 		assertTrue(amountSell1 * 2 == tradeSummary.getTotalAmountSell());
 		assertTrue(amountBuy1 * 2 == tradeSummary.getTotalAmountBuy());
 		assertTrue(rate1 == tradeSummary.getRateAvg());
 
-		tradeSummary = tradeSummaryService.getTradeSummary(currencyFrom1, currencyTo2);
+		tradeSummary = tradeSummaryMap.get(currencyTo2);
 		assertTrue(amountSell2 == tradeSummary.getTotalAmountSell());
 		assertTrue(amountBuy2 == tradeSummary.getTotalAmountBuy());
 		assertTrue(rate2 == tradeSummary.getRateAvg());
 
-		tradeSummary = tradeSummaryService.getTradeSummary(currencyFrom2, currencyTo2);
+		// currencyFrom2
+		tradeSummaryMap = tradeSummaryCache.get(currencyFrom2);
+		assertEquals(1, tradeSummaryMap.keySet().size());
+
+		tradeSummary = tradeSummaryMap.get(currencyTo2);
 		assertTrue(amountSell2 == tradeSummary.getTotalAmountSell());
 		assertTrue(amountBuy2 == tradeSummary.getTotalAmountBuy());
 		assertTrue(rate2 == tradeSummary.getRateAvg());
@@ -90,11 +105,7 @@ public class TradeSummaryServiceTest {
 	@Configuration
 	public static class Config {
 		@Bean
-		public TradeSummaryService tradeSummaryService() {
-			return new TradeSummaryServiceImpl();
-		}
-
-		@Bean
+		@Lazy
 		public TradeSummaryCache tradeSummaryCache() {
 			return new InMemoryTradeSummaryCache();
 		}
