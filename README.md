@@ -1,16 +1,6 @@
 CF Test
 =======
 
-## Requirements
-
-- JDK 1.8.X
-- Maven 3.X
-- Node JS 0.10.X
-- Compass 0.1.X
-- NPM 1.4.X
-
-## Backend (trade-processor)
-
 ### Intro
 
 - The backend has a REST endpoint /trades able to consume trade messages. This endpoint is secured with OAuth.
@@ -22,6 +12,16 @@ CF Test
 
 - Backend: Spring IoC, MVC Security, OAuth2, WebSocket and Data/Mongo
 - Frontend: AngularJS, Bootstrap and Google-Chart
+
+## Requirements
+
+- JDK 1.8.X
+- Maven 3.X
+- Node JS 0.10.X
+- Compass 0.1.X
+- NPM 1.4.X
+
+## Backend (trade-processor)
 
 ### Assumptions
 
